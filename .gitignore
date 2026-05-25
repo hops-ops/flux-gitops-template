@@ -1,0 +1,7 @@
+.DS_Store
+.tmp/
+tmp/
+
+# Do not commit rendered secrets or local kubeconfigs.
+secrets/
+*.kubeconfig
