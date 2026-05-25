@@ -9,21 +9,13 @@ apps/        # application manifests and Flux app resources
 crossplane/  # optional Crossplane packages and platform resources
 ```
 
-Both directories include explicit `kustomization.yaml` files with empty
-`resources` lists. Add manifests to a directory, then list them in that
-directory's `kustomization.yaml`.
+Flux auto-generates the Kustomize input for these directories when no
+`kustomization.yaml` file is present. Add Kubernetes YAML files under a watched
+directory and Flux applies them.
 
 ## Applications
 
 Plain Kubernetes manifests can live directly under `apps/`.
-
-```yaml
-# apps/kustomization.yaml
-resources:
-- namespace.yaml
-- deployment.yaml
-- service.yaml
-```
 
 For Helm charts, commit Flux `HelmRepository` and `HelmRelease` resources.
 
@@ -61,12 +53,7 @@ spec:
       replicaCount: 2
 ```
 
-Then add the file to `apps/kustomization.yaml`.
-
-```yaml
-resources:
-- ingress-nginx.yaml
-```
+Once committed under `apps/`, Flux reconciles the file automatically.
 
 ## Crossplane
 
@@ -74,12 +61,6 @@ resources:
 `FluxGitopsStack` before expecting this path to reconcile.
 
 Use it for Crossplane packages and platform resources:
-
-```yaml
-# crossplane/kustomization.yaml
-resources:
-- configuration.yaml
-```
 
 Example package manifest:
 
@@ -96,6 +77,10 @@ spec:
 
 - Manifests should include their intended namespace unless they are
   cluster-scoped.
+- Every YAML file under `apps/` and enabled `crossplane/` paths must be a valid
+  Kubernetes manifest. Keep examples, values files, and notes outside those
+  paths, or add a `kustomization.yaml` if you intentionally want explicit
+  resource selection.
 - Do not commit secrets. Use External Secrets or another secret management path.
 - `FluxGitopsStack` owns the root Flux source and path Kustomizations; only add
   Flux bootstrap resources here if you intentionally want this repository to
