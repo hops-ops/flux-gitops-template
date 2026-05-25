@@ -11,7 +11,8 @@ crossplane/  # optional Crossplane packages and platform resources
 
 Flux auto-generates the Kustomize input for these directories when no
 `kustomization.yaml` file is present. Add Kubernetes YAML files under a watched
-directory and Flux applies them.
+directory and Flux applies them. The `.gitkeep` files only keep the empty
+directories present in Git; Flux ignores them.
 
 ## Applications
 
